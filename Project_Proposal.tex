@@ -54,66 +54,155 @@
 \end{IEEEkeywords}
 
 \section{Introduction}
-Briefly introduce the project topic, why it is important, and what problem you are trying to solve.
+The difference between professional critic reviews and general audience 
+reviews has long been a topic of discussion in the film industry. Critics 
+often evaluate films based on technical quality, artistic merit, and 
+narrative structure, while general audiences may prioritize entertainment 
+value and personal enjoyment. These differences can lead to noticeable 
+discrepancies in ratings.
+
+This project aims to analyze and compare critic ratings from Rotten Tomatoes 
+with user ratings from Letterboxd using data mining techniques. By combining 
+these datasets, we seek to identify patterns of agreement and disagreement, 
+analyze sentiment differences in written reviews, and determine whether 
+critic scores can be used to predict user ratings.
 
 \section{Objectives}
-List the goals of the project.
+
+The goals of this project are as follows:
 
 \begin{itemize}
-  \item Objective 1:
-  \item Objective 2:
-  \item Objective 3:
-  \item Objective 4:
+
+\item \textbf{Objective 1 -- Data Preprocessing:}
+Develop a unified dataset by cleaning and integrating Rotten Tomatoes 
+critic review data and Letterboxd user rating data. This includes handling 
+missing values, removing duplicates, normalizing rating scales, and matching 
+movies by title and release year. Review text will be preprocessed using 
+tokenization, lowercasing, and stop-word removal.
+
+\item \textbf{Objective 2 -- Correlation Analysis:}
+Measure statistical relationships between critic ratings and user ratings, 
+identifying movies with strong agreement or disagreement and analyzing 
+patterns across genres.
+
+\item \textbf{Objective 3 -- Sentiment Analysis:}
+Perform sentiment analysis on review text to compare the emotional tone of 
+critic reviews and user reviews.
+
+\item \textbf{Objective 4 -- Predictive Modeling:}
+Develop machine learning models to predict user ratings from critic scores 
+and movie attributes, and evaluate prediction performance.
+
 \end{itemize}
 
 \section{Datasets}
-Describe the datasets that will be used in this project.
 
-\subsection{Dataset 1}
+\subsection{Dataset 1: Rotten Tomatoes}
 \begin{itemize}
-  \item Source: Kaggle \cite{leone2020rotten}
-  \item Number of records: 17k movies
-  \item Description: Rotten Tomatoes dataset.
+    \item \textbf{Source:} Kaggle \cite{leone2020rotten}
+    \item \textbf{Size:} 17,000+ movies and over 1 million critic reviews[cite: 34].
+    \item \textbf{Scope:} Data scraped as of October 2020[cite: 83].
+    \item \textbf{Attributes and Types:}
 \end{itemize}
 
-\subsection{Dataset 2}
+\begin{table}[h]
+\centering
+\caption{Rotten Tomatoes Key Attributes}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Attribute} & \textbf{Data Type} & \textbf{Description} \\ \hline
+movie\_title & Nominal & The official title of the film[cite: 36]. \\ \hline
+genres & Nominal & Categorical genre tags[cite: 36]. \\ \hline
+tomatometer\_rating & Ratio & Professional critic score (0-100)[cite: 36]. \\ \hline
+review\_content & Nominal & Raw text of the critic review[cite: 35]. \\ \hline
+release\_year & Interval & The year the movie was released[cite: 36]. \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection{Dataset 2: Letterboxd}
 \begin{itemize}
-  \item Source:
-  \item Number of records:
-  \item Description:
+    \item \textbf{Source:} Kaggle \cite{letterboxd2020}
+    \item \textbf{Size:} Approximately 2.5 million user ratings[cite: 40].
+    \item \textbf{Scope:} User-submitted ratings on a 0.5--5 star scale[cite: 42].
+    \item \textbf{Attributes and Types:}
 \end{itemize}
+
+\begin{table}[h]
+\centering
+\caption{Letterboxd Key Attributes}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Attribute} & \textbf{Data Type} & \textbf{Description} \\ \hline
+movie\_title & Nominal & The title used for dataset matching[cite: 40]. \\ \hline
+rating\_val & Ordinal & User score from 0.5 to 5.0[cite: 42]. \\ \hline
+user\_id & Nominal & Unique identifier for the user[cite: 41]. \\ \hline
+year\_released & Interval & Release year for matching purposes[cite: 41]. \\ \hline
+\end{tabular}
+\end{table}
 
 \section{Data Processing}
-Explain how the data will be prepared before analysis.
 
-\begin{itemize}
-  \item Data cleaning
-  \item Handling missing values
-  \item Data integration
-  \item Feature selection
-\end{itemize}
+Before analysis, both datasets will undergo preprocessing to ensure 
+consistency and compatibility. This includes cleaning movie titles, 
+removing duplicates, and handling missing values. Rating scales will 
+be normalized to allow direct comparison between critic and user scores.
+
+Movies will be matched across datasets using title and release year. 
+Text reviews will be preprocessed using tokenization, lowercasing, 
+removal of stop words, and punctuation filtering to prepare for 
+sentiment analysis. Feature selection will be performed to identify 
+relevant variables for predictive modeling.
 
 \section{Methods}
-Describe the data mining or machine learning techniques that will be used.
+
+To accomplish the project objectives, several data mining techniques 
+will be applied. Correlation analysis will be performed using Pearson 
+and Spearman correlation coefficients to measure relationships between 
+critic and user ratings.
+
+Sentiment analysis will be conducted on review text using natural 
+language processing techniques, including polarity scoring and 
+lexicon-based methods.
+
+For predictive modeling, machine learning algorithms such as linear 
+regression and random forest regression will be implemented to predict 
+user ratings based on critic scores and movie attributes. Model 
+performance will be evaluated using standard regression metrics.
 
 
 
 \section{Evaluation}
-Explain how the results of the project will be evaluated.
 
-\begin{itemize}
-  \item Accuracy
-  \item Correlation metrics
-  \item Visualization
-\end{itemize}
+Project performance will be evaluated using multiple quantitative 
+metrics. Correlation strength will be measured using Pearson and 
+Spearman coefficients. Predictive models will be evaluated using 
+Root Mean Squared Error (RMSE) and R-squared values.
+
+Additionally, visualizations such as scatter plots and distribution 
+graphs will be used to interpret relationships between critic and 
+user ratings.
 
 \section{Implementation Plan}
-Describe the tools and timeline for the project.
 
 \subsection{Tools}
-
+The project will be implemented using Python. Libraries such as 
+Pandas and NumPy will be used for data preprocessing, Scikit-learn 
+for machine learning, and Matplotlib or Seaborn for visualization. 
+Natural Language Toolkit (NLTK) or TextBlob will be used for 
+sentiment analysis.
 
 \subsection{Timeline}
+\begin{itemize}
+    \item Week 1--2: Data collection and preprocessing
+    \item Week 3: Dataset integration and exploratory analysis
+    \item Week 4: Correlation and sentiment analysis
+    \item Week 5: Predictive modeling
+    \item Week 6: Evaluation, visualization, and final report preparation
+\end{itemize}
+
+\subsection{Meeting Schedule}
+
+The team will meet virtually on a weekly basis on Wednesday in the afternoon(sometime between 2-4 pm)
 
 \section{Team Contributions}
 Briefly describe what each team member is responsible for.
@@ -121,15 +210,23 @@ Briefly describe what each team member is responsible for.
 \begin{itemize}
   \item Brady Lauritsen:
   \item Sagun Karki:
-  \item Team Member 3:
-  \item Team Member 4:
+  \item Max Buettenback:
+  \item Harrison Johs:
 \end{itemize}
 
+
+
 \section{Conclusion}
-Summarize what the project aims to accomplish.
+
+This project aims to provide a data-driven comparison between 
+professional critic ratings and general audience ratings. By 
+integrating multiple datasets and applying data mining techniques, 
+we seek to identify patterns of agreement and disagreement, analyze 
+sentiment differences, and evaluate predictive relationships between 
+critic and user evaluations. The results will contribute to a better 
+understanding of how different groups assess film quality.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
 \end{document}
 
-\end{document}
