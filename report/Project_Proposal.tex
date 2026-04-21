@@ -7,9 +7,8 @@
 \usepackage{algorithmic}
 \usepackage{graphicx}
 \usepackage{textcomp}
-\usepackage{newtxtext}
-\usepackage{newtxmath}
 \usepackage{xcolor}
+\usepackage{newtxtext,newtxmath}
 
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
@@ -21,26 +20,23 @@
 
 \author{\IEEEauthorblockN{1\textsuperscript{st} Brady Lauritsen}
   \IEEEauthorblockA{\textit{University of Nebraska-Lincoln} \\
-    \textit{Computer Science | CSCE 474}\\
-    Lincoln, NE, USA} \\
-
+    \textit{Computer Science}\\
+    Lincoln, NE, USA}
   \and
   \IEEEauthorblockN{2\textsuperscript{nd} Sagun Karki}
   \IEEEauthorblockA{\textit{University of Nebraska-Lincoln} \\
     \textit{Computer Science \& Data Science}\\
-    Lincoln, NE, USA} \\
-
+    Lincoln, NE, USA}
   \and
   \IEEEauthorblockN{3\textsuperscript{rd} Harrison Johs}
   \IEEEauthorblockA{\textit{University of Nebraska-Lincoln} \\
     \textit{Computer Science}\\
-    Lincoln, NE, USA} \\
-
+    Lincoln, NE, USA}
   \and
   \IEEEauthorblockN{4\textsuperscript{th} Max Buettenback}
   \IEEEauthorblockA{\textit{University of Nebraska-Lincoln} \\
     \textit{Computer Science}\\
-    Lincoln, NE, USA} \\
+    Lincoln, NE, USA}
 }
 
 \maketitle
@@ -110,18 +106,19 @@ The goals of this project are as follows:
 \end{itemize}
 
 \begin{table}[htbp]
-  \centering
   \caption{Rotten Tomatoes Key Attributes}
-  \label{table:rotten_tomatoes}
-  \begin{tabularx}{\columnwidth}{|l|l|X|}
-    \hline
-    \textbf{Attribute}  & \textbf{Data Type} & \textbf{Description}               \\ \hline
-    movie\_title        & Nominal            & The official title of the film.    \\ \hline
-    genres              & Nominal            & Categorical genre tags.            \\ \hline
-    tomatometer\_rating & Ratio              & Professional critic score (0-100). \\ \hline
-    review\_content     & Nominal            & Raw text of the critic review.     \\ \hline
-    release\_year       & Interval           & The year the movie was released.   \\ \hline
-  \end{tabularx}
+  \begin{center}
+    \begin{tabularx}{\columnwidth}{|l|l|X|}
+      \hline
+      \textbf{Attribute}  & \textbf{Data Type} & \textbf{Description}               \\ \hline
+      movie\_title        & Nominal            & The official title of the film.    \\ \hline
+      genres              & Nominal            & Categorical genre tags.            \\ \hline
+      tomatometer\_rating & Ratio              & Professional critic score (0-100). \\ \hline
+      review\_content     & Nominal            & Raw text of the critic review.     \\ \hline
+      release\_year       & Interval           & The year the movie was released.   \\ \hline
+    \end{tabularx}
+    \label{tab1}
+  \end{center}
 \end{table}
 
 \subsection{Dataset 2: Letterboxd}
@@ -132,17 +129,18 @@ The goals of this project are as follows:
 \end{itemize}
 
 \begin{table}[htbp]
-  \centering
   \caption{Letterboxd Key Attributes}
-  \label{table:letterboxd}
-  \begin{tabularx}{\columnwidth}{|l|l|X|}
-    \hline
-    \textbf{Attribute} & \textbf{Data Type} & \textbf{Description}                 \\ \hline
-    movie\_title       & Nominal            & The title used for dataset matching. \\ \hline
-    rating\_val        & Ordinal            & User score from 0.5 to 5.0.          \\ \hline
-    user\_id           & Nominal            & Unique identifier for the user.      \\ \hline
-    year\_released     & Interval           & Release year for matching purposes.  \\ \hline
-  \end{tabularx}
+  \begin{center}
+    \begin{tabularx}{\columnwidth}{|l|l|X|}
+      \hline
+      \textbf{Attribute} & \textbf{Data Type} & \textbf{Description}                 \\ \hline
+      movie\_title       & Nominal            & The title used for dataset matching. \\ \hline
+      rating\_val        & Ordinal            & User score from 0.5 to 5.0.          \\ \hline
+      user\_id           & Nominal            & Unique identifier for the user.      \\ \hline
+      year\_released     & Interval           & Release year for matching purposes.  \\ \hline
+    \end{tabularx}
+    \label{tab2}
+  \end{center}
 \end{table}
 
 \section{Data Processing}
@@ -173,8 +171,6 @@ For predictive modeling, machine learning algorithms such as linear
 regression and random forest regression will be implemented to predict
 user ratings based on critic scores and movie attributes. Model
 performance will be evaluated using standard regression metrics.
-
-
 
 \section{Evaluation}
 
@@ -210,7 +206,6 @@ sentiment analysis.
 The team will meet virtually on a weekly basis on Wednesday in the afternoon(sometime between 2-4 pm)
 
 \section{Team Contributions}
-Briefly describe what each team member is responsible for.
 
 \begin{itemize}
   \item Brady Lauritsen: Responsible for predictive modeling implementation, including the development of linear and random forest regression models and performance evaluation.
@@ -218,8 +213,6 @@ Briefly describe what each team member is responsible for.
   \item Max Buettenback: Responsible for data preparation and cleaning and exploratory analysis.
   \item Harrison Johs: Responsible for data preparation and cleaning and exploratory analysis.
 \end{itemize}
-
-
 
 \section{Conclusion}
 
@@ -234,4 +227,3 @@ understanding of how different groups assess film quality.
 \bibliographystyle{IEEEtran}
 \bibliography{references}
 \end{document}
-
