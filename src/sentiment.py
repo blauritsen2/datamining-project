@@ -1,0 +1,1 @@
+# Objective 3: Sentiment Analysis: Analyzing user reviews to determine the sentiment and its impact on movie ratings.

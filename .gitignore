@@ -45,3 +45,6 @@
 .bak 
 .mtc
 build/
+# prevents the big data files being pushed to github and breaking the repo
+data/raw/*.csv
+data/processed/*.csv

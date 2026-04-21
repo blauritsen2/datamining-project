@@ -1,0 +1,1 @@
+# Objective 1: Data Preprocessing: Cleaning, integration, and normalizing movie data from rotten tomatoes and Letterboxd

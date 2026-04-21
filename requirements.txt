@@ -1,0 +1,12 @@
+# Data Manipulation
+pandas
+numpy
+
+# Machine Learning & Analysis
+scikit-learn
+nltk
+textblob
+
+# Visualization
+matplotlib
+seaborn
