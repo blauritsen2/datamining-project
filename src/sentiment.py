@@ -1,9 +1,12 @@
 # Objective 3: Sentiment Analysis: Analyzing user reviews to determine the sentiment and its impact on movie ratings.
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import seaborn as sns
+import torch
 from matplotlib.patches import Rectangle  # Fix: Import for type hinting
+from transformers import pipeline
 
 
 def load_data(filepath: str) -> pd.DataFrame:
@@ -124,6 +127,113 @@ def plot_score_distribution(
     plt.savefig(save_path)
     plt.close()
 
+def apply_bert_sentiment(df: pd.DataFrame, sample_size: int = 50000) -> pd.DataFrame:
+    """
+    Applies BERT sentiment classification to a sample of the dataset and returns the exploded dataframe.
+    """
+    device = 0 if torch.cuda.is_available() else -1
+    classifier = pipeline(
+        "sentiment-analysis",
+        model="distilbert-base-uncased-finetuned-sst-2-english",
+        return_all_scores=True,
+        device=device,
+        batch_size=64,
+    )
+
+    df_sample = df.sample(sample_size, random_state=42).copy()
+    texts = df_sample["clean_review"].astype(str).tolist()
+
+    print(f"Inference on {'GPU' if device == 0 else 'CPU'}...")
+    results = classifier(texts, truncation=True, max_length=512)
+
+    # Updated score extraction logic
+    df_sample["bert_sentiment_score"] = [
+        next(label["score"] for label in r if label["label"] == "POSITIVE")
+        if isinstance(r, list)
+        else (r["score"] if r["label"] == "POSITIVE" else 1 - r["score"])
+        for r in results
+    ]
+
+    df_exploded = df_sample.explode("genres")
+
+    df_exploded["bert_sentiment_score_bins"] = pd.cut(
+        df_exploded["bert_sentiment_score"],
+        bins=[0, 0.2, 0.4, 0.6, 0.8, 1.0],
+        labels=["Very Negative", "Negative", "Neutral", "Positive", "Very Positive"],
+    )
+
+    return df_exploded
+
+
+def plot_bert_sentiment_distribution(df_exploded: pd.DataFrame, save_path: str = "genre_sentiment_distribution.png"):
+    """
+    Figure 4: Emotional Profiles by Genre using BERT Sentiment Distribution
+    """
+    sentiment_counts = (
+        df_exploded.groupby(["genres", "bert_sentiment_score_bins"], observed=True)
+        .size()
+        .unstack(fill_value=0)
+    )
+    top_10_genres = df_exploded["genres"].value_counts().nlargest(10).index
+    sentiment_counts_filtered = sentiment_counts.loc[top_10_genres]
+    sentiment_pct = sentiment_counts_filtered.div(
+        sentiment_counts_filtered.sum(axis=1), axis=0
+    )
+
+    plt.figure()
+    colors = ["#d73027", "#fc8d59", "#fee08b", "#91cf60", "#1a9850"]
+    ax = sentiment_pct.plot(
+        kind="barh", stacked=True, figsize=(12, 8), color=colors, width=0.8
+    )
+
+    plt.title("Emotional Profiles by Genre: BERT Sentiment Distribution", fontsize=15)
+    plt.xlabel("Percentage of Reviews", fontsize=12)
+    plt.ylabel("Genre", fontsize=12)
+    plt.legend(title="Sentiment Bin", bbox_to_anchor=(1.05, 1), loc="upper left")
+
+    for p in ax.patches:
+        if isinstance(p, Rectangle):
+            width = p.get_width()
+            if width > 0.05:
+                ax.annotate(
+                    f"{width:.0%}",
+                    (p.get_x() + width / 2, p.get_y() + p.get_height() / 2),
+                    ha="center",
+                    va="center",
+                    color="white",
+                    fontweight="bold",
+                )
+
+    plt.tight_layout()
+    plt.savefig(save_path)
+    plt.close()
+
+
+def export_bert_anomalies(df_exploded: pd.DataFrame, num_samples: int = 10, output_path: str = "bert_anomalies_sample.txt"):
+    """
+    Extracts random anomalous reviews (e.g., Fresh but Very Negative) and writes them to a file.
+    """
+    anomalies = df_exploded[
+        (df_exploded["review_type"] == "Fresh") & 
+        (df_exploded["bert_sentiment_score_bins"] == "Very Negative")
+    ]
+    
+    sample_reviews = anomalies["clean_review"].dropna().unique()
+    
+    if len(sample_reviews) > 0:
+        sample_size = min(num_samples, len(sample_reviews))
+        selected_samples = np.random.choice(sample_reviews, size=sample_size, replace=False)
+    else:
+        selected_samples = []
+
+    with open(output_path, "w", encoding="utf-8") as f:
+        f.write("Sample of 'Fresh' reviews classified as 'Very Negative' by BERT:\n")
+        f.write("-" * 60 + "\n")
+        for i, review in enumerate(selected_samples, 1):
+            f.write(f"{i}. {review}\n")
+            f.write("-" * 60 + "\n")
+    print(f"Exported {len(selected_samples)} anomalous reviews to {output_path}")
+
 
 def main():
     data_filepath = "../data/processed/rotten_tomatoes_preprocessed_reviews.csv"
@@ -139,8 +249,16 @@ def main():
     print("Generating Figure 3: Score Distribution Boxplot...")
     plot_score_distribution(df)
 
-    print("All plots generated successfully!")
+    print("Applying BERT sentiment analysis...")
+    df_exploded = apply_bert_sentiment(df)
 
+    print("Generating Figure 4: BERT Sentiment Distribution...")
+    plot_bert_sentiment_distribution(df_exploded)
+
+    print("Exporting BERT anomalies to text file...")
+    export_bert_anomalies(df_exploded)
+
+    print("All tasks completed successfully!")
 
 if __name__ == "__main__":
     main()
