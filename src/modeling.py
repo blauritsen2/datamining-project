@@ -2,11 +2,15 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import os
 
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score
+
+# figures directory
+os.makedirs("report/Figures", exist_ok=True)
 
 # --- 1. Load Data ---
 print("Loading processed dataset...")
@@ -15,14 +19,25 @@ df = pd.read_csv('data/processed/unified_movie_data.csv')
 # --- 2. Clean Data ---
 print(f"Initial record count: {len(df)}")
 
+# Dropping rows missing our core target or primary feature
 df = df.dropna(subset=['tomatometer_rating', 'avg_user_rating_100'])
 print(f"Cleaned record count for modeling: {len(df)}")
 
-# --- 3. Feature Engineering ---
-# Core feature (your main objective)
+# --- 3. Feature Engineering  ---
+# Start with the baseline movie-wide average
 features = ['tomatometer_rating']
 
-# OPTIONAL: add more features for comparison (recommended)
+# Adding the granular individual scores from the new preprocessing pipeline
+if 'normalized_review_score' in df.columns:
+    # Drop NaNs specifically in this new feature to ensure model stability
+    df = df.dropna(subset=['normalized_review_score'])
+    features.append('normalized_review_score')
+
+# Adding the binary fresh/rotten status
+if 'review_type_encoded' in df.columns:
+    features.append('review_type_encoded')
+
+# Adding metadata features
 if 'top_critic' in df.columns:
     df['top_critic'] = df['top_critic'].astype(int)
     features.append('top_critic')
@@ -33,7 +48,8 @@ if 'release_year' in df.columns:
 X = df[features]
 y = df['avg_user_rating_100']
 
-print(f"Features used: {features}")
+print(f"Features used for modeling: {features}")
+print(f"Final training records after feature-specific cleaning: {len(X)}")
 
 # --- 4. Train/Test Split ---
 X_train, X_test, y_train, y_test = train_test_split(
@@ -43,11 +59,13 @@ X_train, X_test, y_train, y_test = train_test_split(
 # --- 5. Models ---
 
 # Linear Regression (baseline)
+print("\nTraining Linear Regression...")
 lr_model = LinearRegression()
 lr_model.fit(X_train, y_train)
 lr_preds = lr_model.predict(X_test)
 
 # Random Forest (slightly tuned)
+print("Training Random Forest (200 Estimators)...")
 rf_model = RandomForestRegressor(
     n_estimators=200,
     max_depth=10,
@@ -73,27 +91,31 @@ def evaluate(name, actual, predicted):
 lr_r2 = evaluate("Linear Regression", y_test, lr_preds)
 rf_r2 = evaluate("Random Forest", y_test, rf_preds)
 
-# --- 7. Cross-Validation (FIXED: only on training data) ---
-print("\nPerforming 5-Fold Cross-Validation...")
+# --- 7. Cross-Validation ---
+print("\nPerforming 5-Fold Cross-Validation on Random Forest...")
 cv_scores = cross_val_score(rf_model, X_train, y_train, cv=5, scoring='r2')
 
 print(f"Cross-Validation R² Scores: {cv_scores}")
 print(f"Mean CV R²: {np.mean(cv_scores):.4f}")
 
-# --- 8. Feature Importance (for Random Forest) ---
+# --- 8. Feature Importance ---
 if len(features) > 1:
+    print("\nGenerating Feature Importance Plot...")
     importance = pd.Series(rf_model.feature_importances_, index=features)
-    print("\nFeature Importance:")
+    print("Feature Importance Values:")
     print(importance.sort_values(ascending=False))
 
-    importance.sort_values().plot(kind='barh')
-    plt.title("Feature Importance (Random Forest)")
+    plt.figure(figsize=(10, 6))
+    importance.sort_values().plot(kind='barh', color='skyblue')
+    plt.title("Feature Importance: What drives Audience Ratings?")
+    plt.xlabel("Importance Score")
     plt.tight_layout()
     plt.savefig("report/Figures/feature_importance.png")
 
 # --- 9. Visualization: Predicted vs Actual ---
+print("Generating Prediction Results Plot...")
 plt.figure(figsize=(10, 6))
-plt.scatter(y_test, rf_preds, alpha=0.3, label='Predicted')
+plt.scatter(y_test, rf_preds, alpha=0.1, color='teal', label='Predicted')
 
 # Perfect prediction line
 min_val = min(y_test.min(), rf_preds.min())
@@ -105,20 +127,19 @@ plt.xlabel('Actual User Rating (Letterboxd)')
 plt.ylabel('Predicted User Rating')
 plt.legend()
 plt.tight_layout()
-
 plt.savefig('report/Figures/prediction_results.png')
 
-# --- 10. Residual Plot (NEW - great for presentation) ---
+# --- 10. Residual Plot ---
+print("Generating Residual Distribution Plot...")
 residuals = y_test - rf_preds
 
 plt.figure(figsize=(10, 5))
-sns.histplot(residuals, bins=50, kde=True)
+sns.histplot(residuals, bins=50, kde=True, color='purple')
 
 plt.title("Residual Distribution (Prediction Errors)")
 plt.xlabel("Error (Actual - Predicted)")
 plt.ylabel("Frequency")
 plt.tight_layout()
-
 plt.savefig('report/Figures/residuals.png')
 
-print("\nAll visualizations saved to report/Figures/")
+print("\nSUCCESS: All models trained and visualizations saved to report/Figures/")

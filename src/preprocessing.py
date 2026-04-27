@@ -1,91 +1,120 @@
-import pandas as pd
+# Objective 1: Data Preprocessing: Cleaning, integration, and normalizing movie data from rotten tomatoes and Letterboxd
 import re
+import os
+import pandas as pd
+import numpy as np
 import nltk
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
 
-# --- 0. Setup NLTK (For Objective 3) ---
-try:
-    nltk.data.find('tokenizers/punkt')
-    nltk.data.find('corpora/stopwords')
-except LookupError:
-    nltk.download('punkt')
-    nltk.download('stopwords')
+# Helper functions for normalization and text cleaning
+def normalize_score(score):
+    try:
+        if pd.isna(score) or score == "0/0":
+            return np.nan
+        # Handle fractions (e.g., 3.5/5)
+        if "/" in str(score):
+            num, den = str(score).split("/")
+            return (float(num) / float(den)) * 100
+        # Handle Letter Grades (e.g., A-, B+)
+        grades = {"A": 95, "B": 75, "C": 55, "D": 35, "F": 15}
+        grade = str(score)[0].upper()
+        if grade in grades:
+            val = grades[grade]
+            if "+" in str(score): val += 5
+            if "-" in str(score): val -= 5
+            return val
+    except:
+        return np.nan
 
-# --- 1. Load Data ---
-# Using engine='python' to handle malformed lines [cite: 26]
-print("Loading the datasets...")
-rt_movies = pd.read_csv('data/raw/rotten_tomatoes_movies.csv')
-rt_reviews = pd.read_csv('data/raw/rotten_tomatoes_critic_reviews.csv')
-lb_movies = pd.read_csv('data/raw/movie_data.csv', engine='python', on_bad_lines='warn')
-lb_ratings = pd.read_csv('data/raw/ratings_export.csv')
+def clean_review_text(text):
+    text = str(text)
+    text = re.sub(r"<.*?>", "", text)  # Remove HTML tags
+    text = re.sub(r"\s+", " ", text)  # Remove extra whitespace/newlines
+    # Regex to replace LS, PS, and other non-standard whitespace
+    text = re.sub(r'[\u2028\u2029]', ' ', text)
+    return text.strip()
 
-# --- 2. Extract & Standardize Years ---
-# Converting raw dates to discrete year integers to ensure consistency [cite: 111]
-rt_movies['release_year'] = pd.to_datetime(rt_movies['original_release_date'], errors='coerce').dt.year
-rt_movies = rt_movies.dropna(subset=['release_year'])
-rt_movies['release_year'] = rt_movies['release_year'].astype(int)
-lb_movies = lb_movies.dropna(subset=['year_released'])
-lb_movies['year_released'] = lb_movies['year_released'].astype(int)
-
-# --- 3. Clean Titles for Matching ---
 def clean_title(text):
     return str(text).lower().strip() if pd.notna(text) else ""
 
-rt_movies['clean_title'] = rt_movies['movie_title'].apply(clean_title)
-lb_movies['clean_title'] = lb_movies['movie_title'].apply(clean_title)
+# Load data
+print("Loading raw datasets...")
+df_reviews = pd.read_csv('data/raw/rotten_tomatoes_critic_reviews.csv')
+df_movies = pd.read_csv('data/raw/rotten_tomatoes_movies.csv')
+lb_movies = pd.read_csv('data/raw/movie_data.csv', engine='python', on_bad_lines='warn')
+lb_ratings = pd.read_csv('data/raw/ratings_export.csv')
 
-# --- 4. Intermediate Aggregation (The Memory Saver) ---
+# Merge on the unique movie link
+df_merged = pd.merge(df_reviews, df_movies, on="rotten_tomatoes_link", how="inner")
+
+# Drop rows where there is absolutely no text to analyze
+df_merged = df_merged.dropna(subset=["review_content"])
+
+# Fill missing scores with a neutral placeholder or handle NaN
+df_merged["review_score"] = df_merged["review_score"].fillna("0/0")
+
+# Encode Fresh as 1 and Rotten as 0
+df_merged["review_type_encoded"] = df_merged["review_type"].map(
+    {"Fresh": 1, "Rotten": 0}
+)
+
+# Ensure we drop any rows that couldn't be encoded
+df_merged = df_merged.dropna(subset=["review_type_encoded"])
+
+# Apply normalization and text cleaning
+df_merged['normalized_review_score'] = df_merged['review_score'].apply(normalize_score)
+df_merged['review_content'] = df_merged['review_content'].apply(clean_review_text)
+
+# --- Letterboxd Integration & Master Merge ---
+print("Aggregating Letterboxd ratings...")
 lb_avg_ratings = lb_ratings.groupby('movie_id').agg({'rating_val': 'mean'}).reset_index()
 lb_summarized = pd.merge(lb_movies, lb_avg_ratings, on='movie_id')
-rt_combined = pd.merge(rt_movies, rt_reviews, on='rotten_tomatoes_link')
-
-# --- 5. Corrected Normalization ---
-# Correcting scale from 1-10 (SamLearner dataset) to 0-100 to prevent bias [cite: 282-284]
 lb_summarized['avg_user_rating_100'] = (lb_summarized['rating_val'] / 10.0) * 100
 
-# --- 6. Final Integration (The Master Merge) ---
+# Extract and standardize release years
+df_merged['release_year'] = pd.to_datetime(df_merged['original_release_date'], errors='coerce').dt.year
+lb_summarized['year_released'] = pd.to_numeric(lb_summarized['year_released'], errors='coerce')
+
+df_merged = df_merged.dropna(subset=['release_year'])
+df_merged['release_year'] = df_merged['release_year'].astype(int)
+
+lb_summarized = lb_summarized.dropna(subset=['year_released'])
+lb_summarized['year_released'] = lb_summarized['year_released'].astype(int)
+
+# Clean titles for the final merge
+df_merged['clean_title'] = df_merged['movie_title'].apply(clean_title)
+lb_summarized['clean_title'] = lb_summarized['movie_title'].apply(clean_title)
+
+# Final Master Merge
+print("Performing final data integration...")
 master_df = pd.merge(
-    rt_combined, 
+    df_merged, 
     lb_summarized, 
     left_on=['clean_title', 'release_year'], 
     right_on=['clean_title', 'year_released'], 
     how='inner'
 )
 
-# --- 7. Statistical Filtering (Record Deletion) ---
-# Removing 'insignificant' movies with low review counts to ensure data quality 
+# Statistical Filtering (Record Deletion)
 review_counts = master_df.groupby(['clean_title', 'release_year']).size().reset_index(name='review_count')
 master_df = pd.merge(master_df, review_counts, on=['clean_title', 'release_year'])
 master_df = master_df[master_df['review_count'] >= 5]
 
-# --- 8. Dimensionality Reduction & Multicollinearity ---
-# Selecting only essential attributes to reduce high-dimensionality 
+# Dimensionality Reduction: Selecting essential attributes
 essential_cols = [
     'clean_title', 'release_year', 'genres_x', 
     'tomatometer_rating', 'avg_user_rating_100', 
-    'review_content', 'top_critic'
+    'normalized_review_score', 'review_content', 
+    'top_critic', 'review_type_encoded'
 ]
-master_df = master_df[essential_cols]
+master_df = master_df[essential_cols].dropna(subset=['tomatometer_rating', 'avg_user_rating_100'])
 
-# Checking for redundant feature correlation before modeling 
-multicol_check = master_df['tomatometer_rating'].corr(master_df['avg_user_rating_100'])
-print(f"Internal Feature Multicollinearity Check: {multicol_check:.2f}")
-
-def sanitize_text(text):
-    if pd.isna(text):
-        return ""
-    # Regex to replace LS, PS, and other non-standard whitespace
-    return re.sub(r'[\u2028\u2029]', ' ', str(text))
-
-master_df['review_content'] = master_df['review_content'].apply(sanitize_text)
-
-# --- 9. Save Processed Data ---
+# Save Processed Data
+os.makedirs("data/processed", exist_ok=True)
 output_path = 'data/processed/unified_movie_data.csv'
 master_df.to_csv(output_path, index=False)
 
 print("-" * 30)
 print(f"SUCCESS: Preprocessing Complete.")
-print(f"Final Dataset: {len(master_df)} rows x {len(master_df.columns)} attributes.")
+print(f"Final Dataset: {len(master_df):,} rows.")
 print(f"Cleaned data saved to: {output_path}")
 print("-" * 30)
