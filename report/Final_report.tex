@@ -16,26 +16,25 @@
 \title{Comparing Critic and User Movie Reviews Using Data Mining}
 
 \author{
-\IEEEauthorblockN{Brady Lauritsen}
-\IEEEauthorblockA{\textit{Computer Science} \\
-\textit{University of Nebraska-Lincoln}\\
-Lincoln, NE, USA}
-\and
-\IEEEauthorblockN{Sagun Karki}
-\IEEEauthorblockA{\textit{Computer Science \& Data Science} \\
-\textit{University of Nebraska-Lincoln}\\
-Lincoln, NE, USA}
-\vfill
-\and
-\IEEEauthorblockN{Harrison Johs}
-\IEEEauthorblockA{\textit{Computer Science} \\
-\textit{University of Nebraska-Lincoln}\\
-Lincoln, NE, USA}
-\and
-\IEEEauthorblockN{Max Buettenback}
-\IEEEauthorblockA{\textit{Computer Science} \\
-\textit{University of Nebraska-Lincoln}\\
-Lincoln, NE, USA}
+  \IEEEauthorblockN{Brady Lauritsen}
+  \IEEEauthorblockA{\textit{Computer Science} \\
+    \textit{University of Nebraska-Lincoln}\\
+    Lincoln, NE, USA}
+  \and
+  \IEEEauthorblockN{Sagun Karki}
+  \IEEEauthorblockA{\textit{Computer Science \& Data Science} \\
+    \textit{University of Nebraska-Lincoln}\\
+    Lincoln, NE, USA}
+  \and
+  \IEEEauthorblockN{Harrison Johs}
+  \IEEEauthorblockA{\textit{Computer Science} \\
+    \textit{University of Nebraska-Lincoln}\\
+    Lincoln, NE, USA}
+  \and
+  \IEEEauthorblockN{Max Buettenback}
+  \IEEEauthorblockA{\textit{Computer Science} \\
+    \textit{University of Nebraska-Lincoln}\\
+    Lincoln, NE, USA}
 }
 
 \maketitle
@@ -114,32 +113,32 @@ The difference between professional critic reviews and general audience reviews 
 We implemented Linear Regression and Random Forest models to forecast community ratings. The Random Forest Regressor utilized 200 estimators and a max depth of 10. By integrating the Tomatometer consensus and release year, we were able to significantly outperform the linear baseline.
 
 \section{Experimental Results}
-The evaluation demonstrates that our ensemble model is highly effective, capturing 78.31\% of the variance in audience taste. 
+The evaluation demonstrates that our ensemble model is highly effective, capturing 78.31\% of the variance in audience taste.
 
 \begin{table}[htbp]
-\caption{Model Performance Comparison}
-\begin{center}
-\begin{tabular}{|l|c|c|c|}
-\hline
-\textbf{Model} & \textbf{MSE} & \textbf{RMSE} & \textbf{R-Squared} \\ \hline
-Linear Regression & 53.53 & 7.32 & 0.7077 \\ \hline
-\textbf{Random Forest} & \textbf{39.72} & \textbf{6.30} & \textbf{0.7831} \\ \hline
-\end{tabular}
-\end{center}
+  \caption{Model Performance Comparison}
+  \begin{center}
+    \begin{tabular}{|l|c|c|c|}
+      \hline
+      \textbf{Model}         & \textbf{MSE}   & \textbf{RMSE} & \textbf{R-Squared} \\ \hline
+      Linear Regression      & 53.53          & 7.32          & 0.7077             \\ \hline
+      \textbf{Random Forest} & \textbf{39.72} & \textbf{6.30} & \textbf{0.7831}    \\ \hline
+    \end{tabular}
+  \end{center}
 \end{table}
 
 \begin{figure}[htbp]
-\centerline{\includegraphics[width=\columnwidth]{feature_importance.png}}
-\caption{Feature Importance analysis showing the dominance of the Tomatometer.}
-\label{fig_importance}
+  \centerline{\includegraphics[width=\columnwidth]{Figures/feature_importance.png}}
+  \caption{Feature Importance analysis showing the dominance of the Tomatometer.}
+  \label{fig_importance}
 \end{figure}
 
 As shown in Figure \ref{fig_importance}, the Tomatometer consensus is the primary driver of the model, accounting for 92.8\% of the decision-making importance. This confirms that community sentiment is heavily anchored to the professional consensus. The Release Year (6.3\%) also proved significant, suggesting shifts in rating behaviors across different eras.
 
 \begin{figure}[htbp]
-\centerline{\includegraphics[width=\columnwidth]{residuals.png}}
-\caption{Residual distribution confirming an unbiased predictive model.}
-\label{fig_residuals}
+  \centerline{\includegraphics[width=\columnwidth]{Figures/residuals.png}}
+  \caption{Residual distribution confirming an unbiased predictive model.}
+  \label{fig_residuals}
 \end{figure}
 
 Furthermore, the residual distribution in Figure \ref{fig_residuals} follows a symmetric bell curve centered at zero. This proves the model is statistically objective and does not systematically over-predict or under-predict ratings across the 578,752 records used in the finalized training set.
@@ -156,7 +155,7 @@ The team met virtually every Wednesday at 3:00 PM CST to coordinate repository m
 \end{itemize}
 
 \section{Conclusion}
-This project successfully quantified the relationship between critics and audiences. 
+This project successfully quantified the relationship between critics and audiences.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
