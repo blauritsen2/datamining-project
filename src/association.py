@@ -1,0 +1,1 @@
+# Objective 2: Association Mining: Identifying frequent patterns and rule-based relationships between professional critic scores and user ratings.

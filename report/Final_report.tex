@@ -41,7 +41,7 @@ Lincoln, NE, USA}
 \maketitle
 
 \begin{abstract}
-  This project investigates the discrepancy between professional critic reviews and general audience ratings. Using data from Rotten Tomatoes and Letterboxd, we integrated over 800,000 records to analyze patterns in film evaluation. By performing preprocessing, correlation analysis, sentiment analysis, and predictive modeling, we determine how well critic consensus predicts audience sentiment. Our finalized Random Forest model achieved a highly successful R-squared value of 0.7831, proving that professional critical consensus remains a powerful leading indicator of community taste.
+  This project investigates the discrepancy between professional critic reviews and general audience ratings. Using data from Rotten Tomatoes and Letterboxd, we integrated over 800,000 records to analyze patterns in film evaluation. By performing preprocessing, association mining, sentiment analysis, and predictive modeling, we determine how well critic consensus predicts audience sentiment. Our finalized Random Forest model achieved a highly successful R-squared value of 0.7831, proving that professional critical consensus remains a powerful leading indicator of community taste.
 \end{abstract}
 
 \section{Introduction}
@@ -50,7 +50,7 @@ The difference between professional critic reviews and general audience reviews 
 \section{Objectives}
 \begin{itemize}
   \item \textbf{Objective 1 -- Data Preprocessing:} Clean and merge datasets into a 806,405-record unified file.
-  \item \textbf{Objective 2 -- Correlation Analysis:} Measure statistical relationships and association-style patterns across genres.
+  \item \textbf{Objective 2 -- Association Mining:} Discover frequent patterns and hidden rules within the dataset to identify specific conditions (such as genre combinations or release eras) under which critic and audience evaluations systematically diverge.
   \item \textbf{Objective 3 -- Sentiment Analysis:} Analyze review text to compare emotional tone and predictive granularity.
   \item \textbf{Objective 4 -- Predictive Modeling:} Develop ensemble models to forecast user ratings based on critic metadata.
 \end{itemize}
@@ -105,7 +105,7 @@ The difference between professional critic reviews and general audience reviews 
 \section{Data Processing (Harrison Johs)}
 
 \section{Methods}
-\subsection{Correlation Analysis (Max Buettenback)}
+\subsection{Association Mining (Max Buettenback)}
 
 \subsection{Sentiment Analysis (Sagun Karki)}
 
@@ -152,7 +152,7 @@ The team met virtually every Wednesday at 3:00 PM CST to coordinate repository m
   \item \textbf{Brady Lauritsen:} Lead for Predictive Modeling; implemented Random Forest and performed model evaluation.
   \item \textbf{Sagun Karki:} Lead for Sentiment Analysis; analyzed emotional tone and its relationship to numerical scores.
   \item \textbf{Harrison Johs:} Lead for Data Preprocessing; integrated the large datasets and performed cleaning.
-  \item \textbf{Max Buettenback:} Lead for Correlation Analysis; identified statistical relationships and cross-genre patterns.
+  \item \textbf{Max Buettenback:} Lead for Association Mining; identified frequent patterns and rule-based relationships across film genres and eras.
 \end{itemize}
 
 \section{Conclusion}
