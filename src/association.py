@@ -25,7 +25,6 @@ df_encoded = pd.get_dummies(features)
 
 # 4. Run Apriori with 'Deep Search' Support
 # Lowering support to 0.001 (0.1%) means a pattern only needs ~800 movies to count.
-# In a dataset of 806k, this is still a statistically significant sample size.
 frequent_itemsets = apriori(df_encoded, min_support=0.001, use_colnames=True)
 
 # 5. Generate Association Rules
@@ -41,7 +40,7 @@ discrepancy_rules = rules[
 # 7. Output Results
 if not discrepancy_rules.empty:
     print(f"Success! Found {len(discrepancy_rules)} discrepancy rules.")
-    # Sort by Lift to find the strongest "Hidden Rules"
+    # Sort by Lift to 
     output = discrepancy_rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']]
     print(output.sort_values(by='lift', ascending=False).head(10))
 else:
