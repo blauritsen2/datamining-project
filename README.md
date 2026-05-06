@@ -1,83 +1,75 @@
 # datamining-project
 
-Comparing Critic and User Movie Reviews
-Course
+**Comparing Critic and User Movie Reviews**
 
-CSCE 474 – Introduction to Data Mining
+**Course:** CSCE 474 – Introduction to Data Mining
 
-University of Nebraska Lincoln
+**University of Nebraska Lincoln**
 
-# Team Members
-Brady Lauritsen
-Sagun Karki
-Harrison Johs
-Max Buettenback
+## Team Members
+- Brady Lauritsen
+- Sagun Karki
+- Harrison Johs
+- Max Buettenback
 
-Project Overview
+## Project Overview
 
 This project analyzes movie reviews from Rotten Tomatoes (critics) and Letterboxd (users) to compare how professional critics and general audiences evaluate films.
 
 We aim to identify patterns in rating differences, perform sentiment analysis on review text, and develop predictive models to determine whether critic ratings can predict user ratings.
 
-- Objectives:
-1. Data Preprocessing: Integration of Rotten Tomatoes and Letterboxd datasets, including rating normalization and text tokenization.
+### Objectives
+1. **Data Preprocessing:** Integration of Rotten Tomatoes and Letterboxd datasets, including rating normalization and text tokenization.
+2. **Association Mining:** Discovering frequent patterns and high-lift agreement rules between genres, eras, and ratings. 
+3. **Sentiment Analysis:** Analyzing the emotional tone of reviews using NLP techniques.
+4. **Predictive Modeling:** Developing Linear and Random Forest Regression models to predict user ratings.
 
-2. Association Mining: Discovering frequent patterns and high-lift agreement rules between genres, eras, and ratings. 
-
-3. Sentiment Analysis: Analyzing the emotional tone of reviews using NLP techniques.
-
-4. Predictive Modeling: Developing Linear and Random Forest Regression models to predict user ratings.
-
-# Datasets
+## Datasets
 
 - Rotten Tomatoes Movies Dataset
-
 - Rotten Tomatoes Critic Reviews Dataset
-
 - Letterboxd Movie Dataset
-
 - Letterboxd User Reviews Dataset
 
-# Getting started
+## Getting Started
 
 Since the datasets exceed GitHub's file limit the datasets are tracked in .gitignore and must be downloaded manually.
-1. Rotten Tomatoes Datasett: Download from https://www.kaggle.com/datasets/stefanoleone992/rotten-tomatoes-movies-and-critic-reviews-dataset
+1. Rotten Tomatoes Dataset: Download from https://www.kaggle.com/datasets/stefanoleone992/rotten-tomatoes-movies-and-critic-reviews-dataset
     - Place rotten_tomatoes_movies.csv and rotten_tomatoes_critic_reviews.csv into data/raw/
 2. Letterboxd Dataset: Download from https://www.kaggle.com/datasets/samlearner/letterboxd-movie-ratings-data
     - Place movie_data.csv and ratings_export.csv into data/raw/
 
-- Make sure to run pip install -r requirements.txt
-so that you have all of the libraries installed
+- Make sure to run `pip install -r requirements.txt` so that you have all of the libraries installed
 
-# Running the Pipeline
+## Running the Pipeline
 
-1. Preprocessing
-    - Script python src/preprocessing.py
-    This will merge the 12.5 raw records into the 806,405 record dataset and handles title matching, year synchronization, and rating normalization
+1. **Preprocessing**
+    - Script: `python src/preprocessing.py`
+    - This will merge the 12.5M raw records into the 806,405 record dataset and handles title matching, year synchronization, and rating normalization
 
-2. Data Profiling(Optional but it is there)
-    - Script: python src/data_profiling.py
-    Generates descriptive stats on the data
+2. **Data Profiling** (Optional but it is there)
+    - Script: `python src/data_profiling.py`
+    - Generates descriptive stats on the data
 
-3. Association Mining
-    - Script: python src/association.py
-    Executes the apriori algorith with an optimized 0.1% support threshold. It identifies frequent itemsets and high life agreement rules between genres and ratings
+3. **Association Mining**
+    - Script: `python src/association.py`
+    - Executes the apriori algorithm with an optimized 0.1% support threshold. It identifies frequent itemsets and high-lift agreement rules between genres and ratings
 
-4. Sentiment Analysis
-    - Script: python src/sentiment.py
-    Uses the BERT transformer model to analyze linguistic tone in 50,000 reviews. It identifies mismatches between numerical scores and textual sentiment
+4. **Sentiment Analysis**
+    - Script: `python src/sentiment.py`
+    - Uses the BERT transformer model to analyze linguistic tone in 50,000 reviews. It identifies mismatches between numerical scores and textual sentiment
 
-5. Predictive Modeling
-    - Script: python src/modeling.py
-    Trains and evaluates linear regression and random forest models 
+5. **Predictive Modeling**
+    - Script: `python src/modeling.py`
+    - Trains and evaluates linear regression and random forest models
 
 
-# Directory Structure
+## Directory Structure
 * `src/`: Python source files for each objective
-* `data/raw/`: Raw kaggle csvs(ignored by git)
-* `data/processed/`: The finalized, merged datset
+* `data/raw/`: Raw kaggle csvs (ignored by git)
+* `data/processed/`: The finalized, merged dataset
 * `report/`: Holds the final reports and files
-* `report/Figures/`: Holds the figures generated by the code, also used in the report. 
+* `report/Figures/`: Holds the figures generated by the code, also used in the report.
 
 
 
