@@ -39,8 +39,9 @@
 \maketitle
 
 \begin{abstract}
-  This project investigates the discrepancy between professional critic reviews and general audience ratings. Using data from Rotten Tomatoes and Letterboxd, we integrated over 800,000 records to analyze patterns in film evaluation. By performing preprocessing, association mining, sentiment analysis, and predictive modeling, we determine how well critic consensus predicts audience sentiment. Our finalized Random Forest model achieved a highly successful R-squared value of 0.7831, proving that professional critical consensus remains a powerful leading indicator of community taste.
+  This project quantifies the relationship between professional film criticism and community sentiment using over 800,000 records from Rotten Tomatoes and Letterboxd. Through association mining, we found that systematic critic--audience divergence is a statistical outlier rather than the norm, with genre and era emerging as the primary factors of agreement. Sentiment analysis utilizing DistilBERT exposed the ``Fresh Paradox,'' where platform-assigned labels often conflict with the underlying emotional tone of review text due to linguistic nuances like sarcasm and clinical praise. Finally, our Random Forest model achieved an $R^2$ of 0.7831, identifying professional critical consensus as the dominant predictive driver of audience taste.
 \end{abstract}
+
 
 \begin{IEEEkeywords}
   data mining, sentiment analysis, professional reviews, audience ratings, predictive modeling
@@ -203,12 +204,11 @@ The team met virtually every Wednesday at 3:00 PM CST to coordinate repository m
 \end{itemize}
 
 \section{Conclusion}
+Our research confirms that while the digital democratization of film criticism has expanded the volume of available data, professional critical consensus remains the primary anchor for general audience reception. By integrating over 800,000 records through rigorous preprocessing, we established a unified cross-platform foundation that made each subsequent objective possible. Association mining further demonstrated that systematic critic--audience disagreements are isolated outliers driven by genre and era, rather than a pervasive cultural divide.
 
-In this project, we compared professional critic reviews from Rotten Tomatoes with audience ratings from Letterboxd to see how similar they actually are. After cleaning and combining the datasets, we used different data mining techniques like sentiment analysis, association mining, and predictive modeling to analyze the relationship between critics and audiences.
+Sentiment analysis revealed the ``Fresh Paradox,'' confirming that binary platform labels are an incomplete proxy for consumer satisfaction when nuanced language is involved. Complementing this qualitative finding, our Random Forest model validated that aggregated professional scores are a statistically significant predictor of community taste, outperforming individual review signals by a wide margin and generalizing reliably across unseen data.
 
-Our results showed that critic scores are actually a pretty good indicator of audience opinion overall. The Random Forest model performed the best and showed that critic consensus was the strongest factor when predicting audience ratings. We also found that understanding review text is much harder because people use sarcasm, mixed opinions, and different ways of describing movies.
-
-Overall, this project showed that critics and audiences agree more often than expected, but there are still differences depending on the movie, genre, and how reviews are interpreted.
+Future work should expand the scope of each objective in parallel. On the data side, incorporating streaming platforms such as IMDb and Metacritic would broaden the preprocessing foundation beyond two sources. Association mining could be extended with temporal rules to track how critic--audience alignment shifts across decades or in response to cultural events. For sentiment analysis, transitioning to Large Language Models capable of zero-shot classification would better handle sarcasm, irony, and faint praise that DistilBERT currently misclassifies. Finally, predictive modeling could be strengthened by incorporating user-level behavioral features and collaborative filtering signals, moving beyond aggregate scores toward personalized audience taste prediction.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
