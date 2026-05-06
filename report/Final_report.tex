@@ -10,6 +10,7 @@
 \usepackage{xcolor}
 \usepackage{newtxtext,newtxmath}
 \usepackage{xurl}
+\usepackage{csquotes}
 
 \begin{document}
 
@@ -39,7 +40,7 @@
 \maketitle
 
 \begin{abstract}
-  This project quantifies the relationship between professional film criticism and community sentiment using over 800,000 records from Rotten Tomatoes and Letterboxd. Through association mining, we found that systematic critic--audience divergence is a statistical outlier rather than the norm, with genre and era emerging as the primary factors of agreement. Sentiment analysis utilizing DistilBERT exposed the ``Fresh Paradox,'' where platform-assigned labels often conflict with the underlying emotional tone of review text due to linguistic nuances like sarcasm and clinical praise. Finally, our Random Forest model achieved an $R^2$ of 0.7831, identifying professional critical consensus as the dominant predictive driver of audience taste.
+  This project quantifies the relationship between professional film criticism and community sentiment using over 800,000 records from Rotten Tomatoes and Letterboxd. Through association mining, we found that systematic critic--audience divergence is a statistical outlier rather than the norm, with genre and era emerging as the primary factors of agreement. Sentiment analysis utilizing DistilBERT exposed the \enquote{Fresh Paradox}, where platform-assigned labels often conflict with the underlying emotional tone of review text due to linguistic nuances like sarcasm and clinical praise. Finally, our Random Forest model achieved an $R^2$ of 0.7831, identifying professional critical consensus as the dominant predictive driver of audience taste.
 \end{abstract}
 
 
@@ -204,11 +205,11 @@ The team met virtually every Wednesday at 3:00 PM CST to coordinate repository m
 \end{itemize}
 
 \section{Conclusion}
-Our research confirms that while the digital democratization of film criticism has expanded the volume of available data, professional critical consensus remains the primary anchor for general audience reception. By integrating over 800,000 records through rigorous preprocessing, we established a unified cross-platform foundation that made each subsequent objective possible. Association mining further demonstrated that systematic critic--audience disagreements are isolated outliers driven by genre and era, rather than a pervasive cultural divide.
+Our research confirms that while the digital democratization of film criticism has expanded the volume of available data, professional critical consensus remains the primary anchor for general audience reception. Preprocessing over 800,000 records enabled consistent cross-platform metric alignment between Rotten Tomatoes and Letterboxd, making meaningful comparison possible at scale. Association mining further demonstrated that systematic critic--audience disagreements are isolated outliers driven by genre and era, rather than a pervasive cultural divide.
 
-Sentiment analysis revealed the ``Fresh Paradox,'' confirming that binary platform labels are an incomplete proxy for consumer satisfaction when nuanced language is involved. Complementing this qualitative finding, our Random Forest model validated that aggregated professional scores are a statistically significant predictor of community taste, outperforming individual review signals by a wide margin and generalizing reliably across unseen data.
+Sentiment analysis revealed the \enquote{Fresh Paradox}, confirming that binary platform labels are an incomplete proxy for consumer satisfaction when nuanced language is involved. Complementing this qualitative finding, our Random Forest model validated that aggregated professional scores are a statistically significant predictor of community taste, outperforming individual review signals by a wide margin and generalizing reliably across unseen data.
 
-Future work should expand the scope of each objective in parallel. On the data side, incorporating streaming platforms such as IMDb and Metacritic would broaden the preprocessing foundation beyond two sources. Association mining could be extended with temporal rules to track how critic--audience alignment shifts across decades or in response to cultural events. For sentiment analysis, transitioning to Large Language Models capable of zero-shot classification would better handle sarcasm, irony, and faint praise that DistilBERT currently misclassifies. Finally, predictive modeling could be strengthened by incorporating user-level behavioral features and collaborative filtering signals, moving beyond aggregate scores toward personalized audience taste prediction.
+This study has several limitations worth noting. The dataset is bounded by a 2020 scrape cutoff, which excludes post-pandemic shifts in theatrical release patterns, and DistilBERT's binary training objective limits its sensitivity to nuanced tones such as sarcasm and faint praise. Future work should therefore expand data collection to include additional review aggregators such as IMDb and Metacritic, apply temporal association rules to track critic--audience alignment across decades, and transition sentiment analysis toward Large Language Models capable of zero-shot classification. Predictive modeling could be further strengthened by incorporating user-level behavioral features and collaborative filtering signals, moving beyond aggregate consensus toward personalized audience taste prediction.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
