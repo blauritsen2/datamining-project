@@ -1,5 +1,6 @@
 # Objective 3: Sentiment Analysis: Analyzing user reviews to determine the sentiment and its impact on movie ratings.
 
+import os
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -8,6 +9,8 @@ import torch
 from matplotlib.patches import Rectangle  # Fix: Import for type hinting
 from transformers import pipeline
 
+os.makedirs("report/Figures", exist_ok=True)
+
 
 def load_data(filepath: str) -> pd.DataFrame:
     """Load and return the preprocessed reviews dataset."""
@@ -15,12 +18,13 @@ def load_data(filepath: str) -> pd.DataFrame:
 
 
 def plot_sentiment_by_genre(
-    df: pd.DataFrame, save_path: str = "../img/sentiment_by_genre.png"
+    df: pd.DataFrame, save_path: str = "report/Figures/sentiment_by_genre.png"
 ):
     """
     Figure 1: Sentiment Distribution by Genre (Stacked Bar Chart)
     """
     bin_labels = ["Very Negative", "Negative", "Neutral", "Positive", "Very Positive"]
+    os.makedirs("report/Figures", exist_ok=True)
 
     df_plot = df.copy()
     df_plot["bins"] = pd.cut(
@@ -38,14 +42,14 @@ def plot_sentiment_by_genre(
 
     # Plotting
     colors = ["#d73027", "#fc8d59", "#fee08b", "#91cf60", "#1a9850"]
-    ax = data_pct.plot(kind="barh", stacked=True, figsize=(10, 6), color=colors)
+    ax = data_pct.plot(kind="barh", stacked=True, figsize=(12, 8), color=colors)
 
     # --- TRUNCATE Y-AXIS LABELS ---
     # Slices labels to 30 chars and adds ellipsis if they exceed that length
     labels = [
         f"{label[:27]}..." if len(label) > 30 else label for label in data_pct.index
     ]
-    ax.set_yticklabels(labels)
+    ax.set_yticklabels(labels, fontsize=11)
 
     # Labels - Fixed the Pylance attribute warnings via type narrowing
     for p in ax.patches:
@@ -61,6 +65,7 @@ def plot_sentiment_by_genre(
                     va="center",
                     color="black",
                     weight="bold",
+                    fontsize=10,
                 )
 
     plt.title("Sentiment Distribution by Genre")
@@ -73,7 +78,7 @@ def plot_sentiment_by_genre(
 
 
 def plot_review_type_distribution(
-    df: pd.DataFrame, save_path: str = "review_type_distribution.png"
+    df: pd.DataFrame, save_path: str = "report/Figures/review_type_distribution.png"
 ):
     """
     Figure 2: Review Type Distribution
@@ -91,7 +96,7 @@ def plot_review_type_distribution(
 
 
 def plot_score_distribution(
-    df: pd.DataFrame, save_path: str = "horizontal_review_boxplot.png"
+    df: pd.DataFrame, save_path: str = "report/Figures/horizontal_review_boxplot.png"
 ):
     """
     Figure 3: Horizontal Boxplot - Score Distribution: Fresh vs. Rotten
@@ -126,6 +131,7 @@ def plot_score_distribution(
     # 4. Save the plot
     plt.savefig(save_path)
     plt.close()
+
 
 def apply_bert_sentiment(df: pd.DataFrame, sample_size: int = 50000) -> pd.DataFrame:
     """
@@ -165,7 +171,10 @@ def apply_bert_sentiment(df: pd.DataFrame, sample_size: int = 50000) -> pd.DataF
     return df_exploded
 
 
-def plot_bert_sentiment_distribution(df_exploded: pd.DataFrame, save_path: str = "genre_sentiment_distribution.png"):
+def plot_bert_sentiment_distribution(
+    df_exploded: pd.DataFrame,
+    save_path: str = "report/Figures/genre_sentiment_distribution.png",
+):
     """
     Figure 4: Emotional Profiles by Genre using BERT Sentiment Distribution
     """
@@ -209,20 +218,26 @@ def plot_bert_sentiment_distribution(df_exploded: pd.DataFrame, save_path: str =
     plt.close()
 
 
-def export_bert_anomalies(df_exploded: pd.DataFrame, num_samples: int = 10, output_path: str = "bert_anomalies_sample.txt"):
+def export_bert_anomalies(
+    df_exploded: pd.DataFrame,
+    num_samples: int = 10,
+    output_path: str = "report/Figures/bert_anomalies_sample.txt",
+):
     """
     Extracts random anomalous reviews (e.g., Fresh but Very Negative) and writes them to a file.
     """
     anomalies = df_exploded[
-        (df_exploded["review_type"] == "Fresh") & 
-        (df_exploded["bert_sentiment_score_bins"] == "Very Negative")
+        (df_exploded["review_type"] == "Fresh")
+        & (df_exploded["bert_sentiment_score_bins"] == "Very Negative")
     ]
-    
+
     sample_reviews = anomalies["clean_review"].dropna().unique()
-    
+
     if len(sample_reviews) > 0:
         sample_size = min(num_samples, len(sample_reviews))
-        selected_samples = np.random.choice(sample_reviews, size=sample_size, replace=False)
+        selected_samples = np.random.choice(
+            sample_reviews, size=sample_size, replace=False
+        )
     else:
         selected_samples = []
 
@@ -236,7 +251,7 @@ def export_bert_anomalies(df_exploded: pd.DataFrame, num_samples: int = 10, outp
 
 
 def main():
-    data_filepath = "../data/processed/rotten_tomatoes_preprocessed_reviews.csv"
+    data_filepath = "data/processed/rotten_tomatoes_preprocessed_reviews.csv"
     print(f"Loading data from {data_filepath}...")
     df = load_data(data_filepath)
 
@@ -259,6 +274,7 @@ def main():
     export_bert_anomalies(df_exploded)
 
     print("All tasks completed successfully!")
+
 
 if __name__ == "__main__":
     main()
