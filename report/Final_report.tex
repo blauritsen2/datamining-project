@@ -109,6 +109,12 @@ The difference between professional critic reviews and general audience reviews 
 \section{Methods}
 \subsection{Association Mining (Max Buettenback)}
 
+For association mining, we wanted to see if there were any noticeable patterns between critic ratings and audience ratings. We looked at things like genres, critic score ranges, and release years to see if certain types of movies had stronger agreement between critics and audiences.
+
+Before doing this, we grouped some of the data into categories to make the patterns easier to analyze. For example, rating scores were grouped into ranges instead of using exact values. We also grouped genres together when possible to simplify the dataset.
+
+One thing we noticed was that movies with high critic scores usually also had higher audience ratings. We also found that some genres, like drama and thriller movies, tended to have more agreement between critics and audiences, while comedy movies were more inconsistent. Overall, association mining helped us find some useful trends, but it also showed that audience opinions are still very subjective and harder to fully predict.
+
 \subsection{Sentiment Analysis (Sagun Karki)}
 
 
@@ -158,7 +164,12 @@ The team met virtually every Wednesday at 3:00 PM CST to coordinate repository m
 \end{itemize}
 
 \section{Conclusion}
-This project successfully quantified the relationship between critics and audiences.
+
+In this project, we compared professional critic reviews from Rotten Tomatoes with audience ratings from Letterboxd to see how similar they actually are. After cleaning and combining the datasets, we used different data mining techniques like sentiment analysis, association mining, and predictive modeling to analyze the relationship between critics and audiences.
+
+Our results showed that critic scores are actually a pretty good indicator of audience opinion overall. The Random Forest model performed the best and showed that critic consensus was the strongest factor when predicting audience ratings. We also found that understanding review text is much harder because people use sarcasm, mixed opinions, and different ways of describing movies.
+
+Overall, this project showed that critics and audiences agree more often than expected, but there are still differences depending on the movie, genre, and how reviews are interpreted.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
