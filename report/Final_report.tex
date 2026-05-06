@@ -111,33 +111,53 @@ The raw data sourced from Rotten Tomatoes and Letterboxd was preprocessed in two
 The primary objective of this phase was to consolidate the disparate datasets into a single, cohesive dataset ending up at 806,000 records with 7 attributes.
 
 \begin{itemize}
-    \item \textbf{Key Matching and Entity Resolution:} To synchronize the Rotten Tomatoes and Letterboxd datasets, we utilized a composite join key consisting of Title + Release Year. This resolved potential naming conflicts like remakes, and ensured that reviews from different platforms were correctly mapped to the same cinematic entity.
-    \item \textbf{Validity Filtering:} We implemented a minimum review threshold to eliminate outliers and entries with insufficient data. This filtering process ensured the statistical significance of our final dataset.
-    \item \textbf{Schema Mapping:} We unified the project schema by mapping varied naming conventions from original Kaggle datasets into a standardized set of headers for cross-platform analysis.
+  \item \textbf{Key Matching and Entity Resolution:} To synchronize the Rotten Tomatoes and Letterboxd datasets, we utilized a composite join key consisting of Title + Release Year. This resolved potential naming conflicts like remakes, and ensured that reviews from different platforms were correctly mapped to the same cinematic entity.
+  \item \textbf{Validity Filtering:} We implemented a minimum review threshold to eliminate outliers and entries with insufficient data. This filtering process ensured the statistical significance of our final dataset.
+  \item \textbf{Schema Mapping:} We unified the project schema by mapping varied naming conventions from original Kaggle datasets into a standardized set of headers for cross-platform analysis.
 \end{itemize}
 
 \subsection{Feature Engineering and Normalization}
 Once the dataset was integrated, we applied several transformations to prepare the features for sentiment analysis and machine learning modeling.
 
 \begin{itemize}
-    \item \textbf{Rating Normalization:} To account for diverse scoring systems (e.g., Letterboxd’s 5-star scale, Rotten Tomatoes’ percentages, and traditional A–F letter grades), we converted all ratings into a standardized 100-point ratio. This allowed for direct comparisons across platforms.
-    \item \textbf{NLP Text Preparation:} Raw review content underwent a standard Natural Language Processing (NLP) pipeline, including tokenization, lowercasing, and stop-word removal. This eliminated noise and prepared the text for sentiment scoring.
-    \item \textbf{Temporal Standardization:} Disparate datetime strings were reformatted into the ISO 8601 datatype. This uniform temporal structure was critical for conducting accurate era-based trend analysis and identifying shifts in critical reception over time.
-    \item \textbf{Feature Scaling:} Finally, we utilized the \texttt{StandardScaler()} method to normalize feature vectors. By centering the data around a mean of zero with unit variance, we ensured that the Random Forest models remained unbiased toward features with larger numerical magnitudes.
+  \item \textbf{Rating Normalization:} To account for diverse scoring systems (e.g., Letterboxd’s 5-star scale, Rotten Tomatoes’ percentages, and traditional A–F letter grades), we converted all ratings into a standardized 100-point ratio. This allowed for direct comparisons across platforms.
+  \item \textbf{NLP Text Preparation:} Raw review content underwent a standard Natural Language Processing (NLP) pipeline, including tokenization, lowercasing, and stop-word removal. This eliminated noise and prepared the text for sentiment scoring.
+  \item \textbf{Temporal Standardization:} Disparate datetime strings were reformatted into the ISO 8601 datatype. This uniform temporal structure was critical for conducting accurate era-based trend analysis and identifying shifts in critical reception over time.
+  \item \textbf{Feature Scaling:} Finally, we utilized the \texttt{StandardScaler()} method to normalize feature vectors. By centering the data around a mean of zero with unit variance, we ensured that the Random Forest models remained unbiased toward features with larger numerical magnitudes.
 \end{itemize}
 
 \section{Methods}
 \subsection{Association Mining (Max Buettenback)}
-For association mining, we wanted to see if there were any noticeable patterns between critic ratings and audience ratings. We looked at variables such as genres, critic score ranges, and release years to see if certain types of movies had stronger agreement between critics and audiences. 
+For association mining, we wanted to see if there were any noticeable patterns between critic ratings and audience ratings. We looked at variables such as genres, critic score ranges, and release years to see if certain types of movies had stronger agreement between critics and audiences.
 
 To facilitate this, we performed data discretization, converting continuous 0--100 ratings into categorical bins (Low, Mid, High) to satisfy Apriori algorithm requirements. We optimized the minimum support threshold to 0.1\% to ensure the captured patterns represented a significant sample of at least 800+ films within our 806,405-record dataset.
 
-One thing we noticed was that movies with high critic scores usually also had higher audience ratings, which we confirmed through high-lift agreement rules. Specifically, contemporary dramas and histories showed a 100\% confidence link to high ratings across both groups with a Lift of 2.63[cite: 160]. While we aimed to find "The Split" where ratings were mutually exclusive, we found that systematic discrepancies are actually statistical outliers rather than repeatable rules Ultimately, the analysis showed that while audience opinions are subjective, they are anchored by professional consensus more than previously hypothesized.
+One thing we noticed was that movies with high critic scores usually also had higher audience ratings, which we confirmed through high-lift agreement rules. Specifically, contemporary dramas and histories showed a 100\% confidence link to high ratings across both groups with a Lift of 2.63. While we aimed to find "The Split" where ratings were mutually exclusive, we found that systematic discrepancies are actually statistical outliers rather than repeatable rules Ultimately, the analysis showed that while audience opinions are subjective, they are anchored by professional consensus more than previously hypothesized.
 
 \subsection{Sentiment Analysis (Sagun Karki)}
+While numerical ratings provide a quantitative baseline, they often fail to capture the nuance of a reviewer's true intent. To bridge this gap, we implemented a sentiment analysis pipeline to evaluate the emotional granularity of the review content.
+
+
+We utilized the DistilBERT model (\textit{distilbert-base-uncased-finetuned-sst-2-english}) to classify review text into five sentiment bins ranging from Very Negative to Very Positive. This process allowed us to compare the \textit{label} assigned by the platform, such as a \textit{Fresh} rating, against the actual emotional tone of the text.
+
+\begin{figure}[htbp]
+  \centerline{\includegraphics[width=\columnwidth]{Figures/sentiment_by_genre.png}}
+  \caption{Sentiment Distribution by Genre showing normalized review scores across the top 10 genres.}
+  \label{fig_sentiment_genre}
+\end{figure}
+
+Our analysis revealed three primary insights:
+
+\begin{itemize}
+  \item \textbf{The \textit{Fresh} Paradox:} We identified a significant number of \textit{Fresh} reviews that BERT classified as \textit{Very Negative}. Manual inspection via Gemini LLM (used for qualitative validation) revealed that critics often use \textit{faint praise} or clinical language which automated models struggle to distinguish from pure negativity.
+  \item \textbf{Genre Emotional Profiles:} As illustrated in Fig. \ref{fig_sentiment_genre}, sentiment distribution varies by genre. For instance, Drama and Romance reviews showed a wider range of emotional variance compared to the more polarized sentiments found in Action and Adventure.
+  \item \textbf{Linguistic Complexity:} The accuracy of sentiment analysis remains limited by sarcasm and \textit{Good-Bad} words. This occurs when a reviewer uses negative adjectives to describe a positive experience in a horror or gritty drama.
+\end{itemize}
+
+Ultimately, this experiment proved that while aggregate scores like the Tomatometer are highly predictive, individual review text contains high dimensionality and noise that requires advanced LLM intervention to fully decode.
 
 \subsection{Predictive Modeling (Brady Lauritsen)}
-We implemented Linear Regression and Random Forest models to forecast community ratings. For this objective, the 806,405-record project pool was filtered to a subset of 578,752 records to ensure absolute feature completeness across all target predictors. 
+We implemented Linear Regression and Random Forest models to forecast community ratings. For this objective, the 806,405-record project pool was filtered to a subset of 578,752 records to ensure absolute feature completeness across all target predictors.
 
 The modeling phase was heavily informed by the results of our association mining in Objective 2, which identified a fundamental lack of systemic rating discrepancies. This categorical alignment suggested that a high-performing predictive link existed between professional consensus and audience taste. The Random Forest Regressor was selected for its ability to handle non-linear relationships and its inherent resistance to outliers, utilizing 200 estimators and a max depth of 10.
 

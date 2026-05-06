@@ -1,0 +1,22 @@
+Sample of 'Fresh' reviews classified as 'Very Negative' by BERT:
+------------------------------------------------------------
+1. Bong is less interested in shocks than in the synergy between the country's vast fields and the equally mysterious inner landscape of the dazed matriarch making her way across them.
+------------------------------------------------------------
+2. More enlightening than entertaining.
+------------------------------------------------------------
+3. The film feels like a mix between the unnerving scheming of American Animals and the mile-a-minute repugnance of The Wolf of Wall Street... apparently, when it comes to money, we're all animals.
+------------------------------------------------------------
+4. Someone would have to be coldhearted to not smile watching Christopher Robin, whether it's from tapping your feet to the classic songs or soaking in the valuable life lessons
+------------------------------------------------------------
+5. Never quite finds the confidence it needs to transform from zero to hero.
+------------------------------------------------------------
+6. If the thought of watching a film about the Duke of York overcoming his speech impediment already has you clicking elsewhere, then director Tom Hooper's masterfully-crafted biopic may not be for you. You'll be missing out.
+------------------------------------------------------------
+7. May as well have been called Wet Hot Met Sally.
+------------------------------------------------------------
+8. Stuffed with wooden dialogue and dubious politics, there's still a grim fascination to this pulpy story shot in a fizzing streetlamp glow.
+------------------------------------------------------------
+9. An over-amped action film with just enough character shadings and color to make us wish it were better.
+------------------------------------------------------------
+10. Oh sure, the film's about 20 minutes too long, the pacing is all over the place and the movie's star Dwayne "The Rock" Johnson couldn't carry a dramatic scene in a paper bag. But I say again, not terrible.
+------------------------------------------------------------
