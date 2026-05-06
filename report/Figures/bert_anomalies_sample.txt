@@ -1,0 +1,22 @@
+Sample of 'Fresh' reviews classified as 'Very Negative' by BERT:
+------------------------------------------------------------
+1. If you're just looking for more massive dinosaurs causing havoc then this does what it says on the clawed tin.
+------------------------------------------------------------
+2. It's an OK movie that seems like it should have been a great one, but falls well short of that mark.
+------------------------------------------------------------
+3. It's hard to imagine a moviegoer who won't identify with these sometimes awkward, sometimes charming young spellers, or with their equally not-ready-for-their-closeup parents.
+------------------------------------------------------------
+4. Gelbakhiani's Merab is the first of many stones thrown to tearing the walls of homophobia globally.
+------------------------------------------------------------
+5. Moves at a clip in its second act that doesn't let its journey or lively script achieve the original's tension or emotion. What remains is its determination and attitude.
+------------------------------------------------------------
+6. His violent, pathetic end makes you sad not for the man but for a world in which such a creature could exist -- and thrive.
+------------------------------------------------------------
+7. McGregor's directorial debut is a well-crafted drama but lacks the depth of Roth's masterful book.
+------------------------------------------------------------
+8. The characters are stock, and the story is a clich-ridden morass of excess that builds to absurd proportions, and does so with a straight face.
+------------------------------------------------------------
+9. The film is sprinkled with the type of small moments and details that elevate, a trenchant tee shirt here, an old wedding photo there, a faulty house alarm signaling impending danger.
+------------------------------------------------------------
+10. A supercharged cross between an episode of CSI and a World Health Organization infographic.
+------------------------------------------------------------
